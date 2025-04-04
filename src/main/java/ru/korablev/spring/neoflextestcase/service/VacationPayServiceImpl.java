@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class VacationPayServiceImpl implements VacationPayService {
 
     private final HolidayService holidayService;
-    private static final BigDecimal AVERAGE_WORKING_DATES_IN_MONTH = new BigDecimal("20.6");
+    private static final BigDecimal AVERAGE_WORKING_DATES_IN_MONTH = new BigDecimal("29.3");
 
     @Override
     public VacationPayResponse calculateVacationPay(VacationPayRequest vacationPayRequest) {
@@ -22,7 +22,8 @@ public class VacationPayServiceImpl implements VacationPayService {
         int vacationDays = vacationPayRequest.getVacationDays();
         LocalDate startDate = vacationPayRequest.getStartDate();
 
-        BigDecimal averageSalaryPerDay = averageSalary.divide(AVERAGE_WORKING_DATES_IN_MONTH, 2, RoundingMode.FLOOR);
+        BigDecimal averageSalaryPerDay =
+                averageSalary.divide(AVERAGE_WORKING_DATES_IN_MONTH, 2, RoundingMode.FLOOR);
 
         int workingDays = (startDate != null)
                 ? holidayService.countWorkingDays(startDate, vacationDays)
