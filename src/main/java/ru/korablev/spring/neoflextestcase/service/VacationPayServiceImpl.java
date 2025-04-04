@@ -1,20 +1,13 @@
 package ru.korablev.spring.neoflextestcase.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.korablev.spring.neoflextestcase.dto.VacationPayRequest;
 import ru.korablev.spring.neoflextestcase.dto.VacationPayResponse;
-import ru.korablev.spring.neoflextestcase.exception.InvalidRequestException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +18,6 @@ public class VacationPayServiceImpl implements VacationPayService {
 
     @Override
     public VacationPayResponse calculateVacationPay(VacationPayRequest vacationPayRequest) {
-        if (vacationPayRequest.getAverageSalary() <= 0 || vacationPayRequest.getVacationDays() <= 0) {
-            throw new InvalidRequestException("Средняя зарплата и " +
-                    "количество отпускных дней должны быть положительными числами.");
-        }
-
         BigDecimal averageSalary = BigDecimal.valueOf(vacationPayRequest.getAverageSalary());
         int vacationDays = vacationPayRequest.getVacationDays();
         LocalDate startDate = vacationPayRequest.getStartDate();

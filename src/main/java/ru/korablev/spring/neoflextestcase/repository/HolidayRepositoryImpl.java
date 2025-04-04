@@ -2,6 +2,7 @@ package ru.korablev.spring.neoflextestcase.repository;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -15,12 +16,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class HolidayRepositoryImpl implements HolidayRepository {
 
     @Value("${holidays.file.path}")
@@ -28,14 +27,13 @@ public class HolidayRepositoryImpl implements HolidayRepository {
 
     private final ResourceLoader resourceLoader;
     private final Set<LocalDate> holidays = new HashSet<>();
-    private static final Logger logger = LoggerFactory.getLogger(HolidayRepositoryImpl.class);
 
     @PostConstruct
     public void init() {
         try {
             Resource resource = resourceLoader.getResource(holidaysFilePath);
             if (!resource.exists()) {
-                logger.error("Файл с выходными не найден: " + holidaysFilePath);
+                log.error("Файл с выходными не найден: {}", holidaysFilePath);
                 return;
             }
             try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
@@ -46,13 +44,13 @@ public class HolidayRepositoryImpl implements HolidayRepository {
                             LocalDate date = LocalDate.parse(line.trim());
                             holidays.add(date);
                         } catch (Exception e) {
-                            logger.warn("Ошибка парсинга даты: {}", line, e);
+                            log.warn("Ошибка парсинга даты: {}", line, e);
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            logger.error("Ошибка при чтении файла", e);
+            log.error("Ошибка при чтении файла", e);
         }
     }
 
