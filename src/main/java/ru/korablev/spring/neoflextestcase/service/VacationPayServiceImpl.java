@@ -1,6 +1,7 @@
 package ru.korablev.spring.neoflextestcase.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.korablev.spring.neoflextestcase.dto.VacationPayRequest;
 import ru.korablev.spring.neoflextestcase.dto.VacationPayResponse;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VacationPayServiceImpl implements VacationPayService {
 
     private final HolidayService holidayService;
@@ -19,6 +21,10 @@ public class VacationPayServiceImpl implements VacationPayService {
     @Override
     public VacationPayResponse calculateVacationPay(VacationPayRequest vacationPayRequest) {
         BigDecimal averageSalary = BigDecimal.valueOf(vacationPayRequest.getAverageSalary());
+        if (averageSalary.compareTo(BigDecimal.ZERO) < 0) {
+            log.error("Average salary cannot be negative");
+            averageSalary = BigDecimal.ZERO;
+        }
         int vacationDays = vacationPayRequest.getVacationDays();
         LocalDate startDate = vacationPayRequest.getStartDate();
 
