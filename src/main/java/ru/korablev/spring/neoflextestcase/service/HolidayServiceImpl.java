@@ -21,23 +21,26 @@ public class HolidayServiceImpl implements HolidayService {
     @PostConstruct
     public void init() {
         holidays = new HashSet<>();
-        try {
-            holidays.addAll(holidayRepository.getHolidays(LocalDate.now().getYear()));
-        } catch (Exception e) {
-            log.error("Failed to fetch holidays for the current year from repository", e);
-        }
-        try {
-            holidays.addAll(holidayRepository.getHolidays(LocalDate.now().plusYears(1).getYear()));
-        } catch (Exception e) {
-            log.error("Failed to fetch holidays for the next year from repository");
+        int currentYear = LocalDate.now().getYear();
+        int nextYear = currentYear + 1;
+
+        for (int year : new int[]{currentYear, nextYear}) {
+            try {
+                holidays.addAll(holidayRepository.getHolidays(year));
+            } catch (Exception e) {
+                log.warn("Failed to fetch holidays for year: {}", year);
+            }
         }
     }
 
     @Override
     public boolean isHoliday(LocalDate date) {
-        return holidays.contains(date) ||
-                date.getDayOfWeek() == DayOfWeek.SUNDAY ||
-                date.getDayOfWeek() == DayOfWeek.SATURDAY;
+        return holidays.contains(date) || isWeekend(date);
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
     }
 
     @Override
@@ -47,16 +50,9 @@ public class HolidayServiceImpl implements HolidayService {
 
     @Override
     public int countWorkingDays(LocalDate startDate, int numberOfDays) {
-        int workingDays = 0;
-        LocalDate currentDate = startDate;
-
-        for (int i = 0; i < numberOfDays; i++) {
-            if (isWorkingDay(currentDate)) {
-                workingDays++;
-            }
-            currentDate = currentDate.plusDays(1);
-        }
-
-        return workingDays;
+        return startDate.datesUntil(startDate.plusDays(numberOfDays))
+                .filter(this::isWorkingDay)
+                .mapToInt(date -> 1)
+                .sum();
     }
 }
