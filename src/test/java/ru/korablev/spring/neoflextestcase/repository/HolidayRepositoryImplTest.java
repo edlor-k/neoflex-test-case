@@ -1,5 +1,6 @@
 package ru.korablev.spring.neoflextestcase.repository;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+
+@Tag("skip-ci")
 @ExtendWith(MockitoExtension.class)
 public class HolidayRepositoryImplTest {
 

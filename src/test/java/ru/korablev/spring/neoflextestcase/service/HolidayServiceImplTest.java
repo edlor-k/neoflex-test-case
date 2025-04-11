@@ -26,6 +26,7 @@ public class HolidayServiceImplTest {
     void identifiesHolidayFromRepository() {
         LocalDate holiday = LocalDate.of(2025, 4, 11);
         when(holidayRepository.getHolidays(2025)).thenReturn(Set.of(holiday));
+        holidayService.init();
 
         assertTrue(holidayService.isHoliday(holiday));
     }
