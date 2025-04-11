@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Vacation Pay", description = "Main controller for vacation pay calculation")
+@RequestMapping("/api/v1")
 public class VacationPayController {
     private final VacationPayService vacationPayService;
 
