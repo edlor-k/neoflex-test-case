@@ -22,7 +22,8 @@ class NeoflexTestCaseApplicationTests {
 
     private void assertVacationPay(double salary, int days, double expected) {
         ResponseEntity<VacationPayResponse> response =
-                restTemplate.getForEntity("/calculate?averageSalary={salary}&vacationDays={days}",
+                restTemplate
+                        .getForEntity("/api/v1/calculate?averageSalary={salary}&vacationDays={days}",
                         VacationPayResponse.class, salary, days);
 
         assertThat(Objects.requireNonNull(response.getBody()).getTotalVacationPay())
@@ -52,7 +53,9 @@ class NeoflexTestCaseApplicationTests {
         request.setStartDate(LocalDate.of(2025, 5, 5));
 
         ResponseEntity<VacationPayResponse> response =
-                restTemplate.getForEntity("/calculate?averageSalary={salary}&vacationDays={days}&startDate={date}",
+                restTemplate
+                        .getForEntity("/api/v1/calculate?averageSalary={salary}" +
+                                        "&vacationDays={days}&startDate={date}",
                         VacationPayResponse.class, request.getAverageSalary(),
                         request.getVacationDays(), request.getStartDate());
         assertThat(Objects.requireNonNull(response.getBody()).getTotalVacationPay()).isEqualTo(3412.96);
@@ -66,7 +69,9 @@ class NeoflexTestCaseApplicationTests {
         request.setStartDate(LocalDate.of(2025, 4, 25));
 
         ResponseEntity<VacationPayResponse> response =
-                restTemplate.getForEntity("/calculate?averageSalary={salary}&vacationDays={days}&startDate={date}",
+                restTemplate
+                        .getForEntity("/api/v1/calculate?averageSalary={salary}" +
+                                        "&vacationDays={days}&startDate={date}",
                         VacationPayResponse.class, request.getAverageSalary(),
                         request.getVacationDays(), request.getStartDate());
         assertThat(Objects.requireNonNull(response.getBody()).getTotalVacationPay()).isEqualTo(4000.00);
