@@ -16,11 +16,10 @@ import java.util.Set;
 @Slf4j
 public class HolidayServiceImpl implements HolidayService {
     private final HolidayRepository holidayRepository;
-    private Set<LocalDate> holidays;
+    private final Set<LocalDate> holidays = new HashSet<>();
 
     @PostConstruct
     public void init() {
-        holidays = new HashSet<>();
         int currentYear = LocalDate.now().getYear();
         int nextYear = currentYear + 1;
 
